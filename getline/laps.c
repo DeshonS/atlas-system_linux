@@ -1,7 +1,7 @@
 #include "laps.h"
 
-static Car *cars = NULL;
-static size_t num_cars = 0;
+static Car *cars;
+static size_t num_cars;
 
 void sort_cars(void)
 {
