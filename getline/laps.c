@@ -3,6 +3,10 @@
 static Car *cars;
 static size_t num_cars;
 
+/**
+ * sort_cars - sorts cars in order based on their ID
+ */
+
 void sort_cars(void)
 {
 	for (size_t i = 0; i < num_cars - 1; i++)
@@ -19,6 +23,12 @@ void sort_cars(void)
 		}
 	}
 }
+
+/**
+ * race_state - updates the race using vehicle IDs and number of cars
+ * @id: Vehicle IDs
+ * @size: number of racers in the race, if 0, frees all memory
+ */
 
 void race_state(int *id, size_t size)
 {

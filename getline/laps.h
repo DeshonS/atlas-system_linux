@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/**
+ * struct Car - represents a car in the race
+ * @id: vehicle ID
+ * @laps: number of laps car has completed
+ */
+
 typedef struct Car
 {
 	int id;
