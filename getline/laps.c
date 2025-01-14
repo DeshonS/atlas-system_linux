@@ -1,6 +1,6 @@
 #include "laps.h"
 
-typedef struct Car 
+typedef struct Car
 {
 	int id;
 	int laps;
@@ -9,15 +9,16 @@ typedef struct Car
 static Car *cars = NULL;
 static size_t num_cars = 0;
 
-void sort_cars() 
+void sort_cars(void)
 {
-	for (size_t i = 0; i < num_cars - 1; i++) 
+	for (size_t i = 0; i < num_cars - 1; i++)
 	{
-		for (size_t j = 0; j < num_cars - i - 1; j++) 
+		for (size_t j = 0; j < num_cars - i - 1; j++)
 		{
-			if (cars[j].id > cars[j + 1].id) 
+			if (cars[j].id > cars[j + 1].id)
 			{
 				Car temp = cars[j];
+
 				cars[j] = cars[j + 1];
 				cars[j + 1] = temp;
 			}
@@ -27,7 +28,7 @@ void sort_cars()
 
 void race_state(int *id, size_t size)
 {
-	if (size == 0) //frees all memory and resets the race
+	if (size == 0)
 	{ 
 		free(cars);
 		cars = NULL;
@@ -35,7 +36,7 @@ void race_state(int *id, size_t size)
 		return;
 	}
 
-	for (size_t i = 0; i < size; i++)//car laps
+	for (size_t i = 0; i < size; i++)
 	{
 		int car_exists = 0;
 		for (size_t j = 0; j < num_cars; j++)
@@ -48,7 +49,7 @@ void race_state(int *id, size_t size)
 			}
 		}
 
-		if (!car_exists) //adds new car to the race
+		if (!car_exists)
 		{
 			cars = realloc(cars, (num_cars + 1) * sizeof(Car));
 			cars[num_cars].id = id[i];
@@ -60,7 +61,7 @@ void race_state(int *id, size_t size)
 
 	sort_cars();
 
-	printf("Race state:\n"); //shows the current race state
+	printf("Race state:\n");
 	for (size_t i = 0; i < num_cars; i++)
 	{
 		printf("Car %d [%d laps]\n", cars[i].id, cars[i].laps);
