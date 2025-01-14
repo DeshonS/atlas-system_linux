@@ -29,7 +29,7 @@ void race_state(int *id, size_t size) {
         if (!car_exists) { //adds new car to the race
             cars = realloc(cars, (num_cars + 1) * sizeof(Car));
             cars[num_cars].id = id[i];
-            cars[num_cars].laps = 1;
+            cars[num_cars].laps = 0;
             num_cars++;
             printf("Car %d joined the race\n", id[i]);
         }
