@@ -8,6 +8,13 @@ typedef struct Car {
 static Car *cars = NULL;
 static size_t num_cars = 0;
 
+int carcmp(const void *a, const void *b)
+{
+    const Car *car_a = (const Car *)a;
+    const Car *car_b = (const Car *)b;
+    return car_a->id - car_b->id;
+}
+
 void race_state(int *id, size_t size) {
     if (size == 0) { //frees all memory and resets the race
         free(cars);
@@ -34,6 +41,8 @@ void race_state(int *id, size_t size) {
             printf("Car %d joined the race\n", id[i]);
         }
     }
+
+    qsort(cars, num_cars, sizeof(Car), carcmp); //sorting cars by ID for output
 
     printf("Race state:\n"); //shows the current race state
     for (size_t i = 0; i < num_cars; i++) {
