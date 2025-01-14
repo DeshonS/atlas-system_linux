@@ -29,7 +29,7 @@ void sort_cars(void)
 void race_state(int *id, size_t size)
 {
 	if (size == 0)
-	{ 
+	{
 		free(cars);
 		cars = NULL;
 		num_cars = 0;
@@ -39,6 +39,7 @@ void race_state(int *id, size_t size)
 	for (size_t i = 0; i < size; i++)
 	{
 		int car_exists = 0;
+
 		for (size_t j = 0; j < num_cars; j++)
 		{
 			if (cars[j].id == id[i])
