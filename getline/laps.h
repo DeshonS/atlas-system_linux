@@ -5,6 +5,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void race_start(int *id, size_t size);
+void race_state(int *id, size_t size);
 
 #endif
