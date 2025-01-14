@@ -1,11 +1,5 @@
 #include "laps.h"
 
-typedef struct Car
-{
-	int id;
-	int laps;
-} Car;
-
 static Car *cars = NULL;
 static size_t num_cars = 0;
 
