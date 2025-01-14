@@ -1,0 +1,1 @@
+First weeks assignments for T3
