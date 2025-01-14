@@ -8,11 +8,16 @@ typedef struct Car {
 static Car *cars = NULL;
 static size_t num_cars = 0;
 
-int carcmp(const void *a, const void *b)
-{
-    const Car *car_a = (const Car *)a;
-    const Car *car_b = (const Car *)b;
-    return car_a->id - car_b->id;
+void sort_cars() {
+    for (size_t i = 0; i < num_cars - 1; i++) {
+        for (size_t j = 0; j < num_cars - i - 1; j++) {
+            if (cars[j].id > cars[j + 1].id) {
+                Car temp = cars[j];
+                cars[j] = cars[j + 1];
+                cars[j + 1] = temp;
+            }
+        }
+    }
 }
 
 void race_state(int *id, size_t size) {
@@ -42,7 +47,7 @@ void race_state(int *id, size_t size) {
         }
     }
 
-    qsort(cars, num_cars, sizeof(Car), carcmp); //sorting cars by ID for output
+    sort_cars();
 
     printf("Race state:\n"); //shows the current race state
     for (size_t i = 0; i < num_cars; i++) {
