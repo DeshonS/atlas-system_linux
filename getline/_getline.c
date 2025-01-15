@@ -1,5 +1,4 @@
 #include "_getline.h"
-#include <string.h>
 
 char *_getline(const int fd)
 {
@@ -29,6 +28,7 @@ char *_getline(const int fd)
         {
             if (buffer[buffer_pos] == '\n') // End of a line
             {
+                // Allocate space for the new line
                 char *new_line = realloc(line, line_length + 1);
                 if (!new_line)
                 {
@@ -36,23 +36,28 @@ char *_getline(const int fd)
                     return NULL;
                 }
                 line = new_line;
-                memcpy(line + line_length, buffer, buffer_pos);
-                line[line_length] = '\0';
+
+                // Copy data from buffer to line
+                memcpy(line + line_length, buffer + buffer_pos - line_length, line_length);
+                line[line_length] = '\0'; // Null-terminate the line
                 buffer_pos++; // Move past the newline character
                 return line;
             }
         }
 
         // Add remaining data in buffer to the line
-        char *new_line = realloc(line, line_length + (buffer_end - buffer_pos));
+        size_t chunk_size = buffer_end - buffer_pos;
+        char *new_line = realloc(line, line_length + chunk_size);
         if (!new_line)
         {
             free(line);
             return NULL;
         }
         line = new_line;
-        memcpy(line + line_length, buffer + buffer_pos, buffer_end - buffer_pos);
-        line_length += buffer_end - buffer_pos;
+
+        // Copy the data
+        memcpy(line + line_length, buffer + buffer_pos, chunk_size);
+        line_length += chunk_size;
         buffer_pos = buffer_end;
     }
 }
