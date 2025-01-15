@@ -1,4 +1,5 @@
 #include "_getline.h"
+#include <string.h>
 
 char *_getline(const int fd)
 {
@@ -28,9 +29,9 @@ char *_getline(const int fd)
                 if (!new_line)
                     return NULL;
 
+                memcpy(new_line + line_length, buffer, buffer_pos);
+                new_line[line_length + buffer_pos] = '\0';
                 line = new_line;
-                memcpy(line + line_length, buffer, buffer_pos);
-                line[line_length + buffer_pos] = '\0';
                 buffer_pos++;
                 return line;
             }
@@ -40,9 +41,9 @@ char *_getline(const int fd)
         if (!new_line)
             return NULL;
 
-        line = new_line;
-        memcpy(line + line_length, buffer + buffer_pos, buffer_end - buffer_pos);
+        memcpy(new_line + line_length, buffer + buffer_pos, buffer_end - buffer_pos);
         line_length += buffer_end - buffer_pos;
+        line = new_line;
         buffer_pos = buffer_end;
     }
 }
