@@ -13,37 +13,46 @@ char *_getline(const int fd)
 
     while (1)
     {
+        // If buffer is empty, refill it
         if (buffer_pos >= buffer_end)
         {
             buffer_end = read(fd, buffer, READ_SIZE);
             buffer_pos = 0;
-            if (buffer_end <= 0) // EOF or error
-                return NULL;
+
+            // End of file or error
+            if (buffer_end <= 0)
+                return (line && line_length > 0) ? line : NULL;
         }
 
+        // Process characters in the buffer
         for (; buffer_pos < buffer_end; buffer_pos++)
         {
-            if (buffer[buffer_pos] == '\n')
+            if (buffer[buffer_pos] == '\n') // End of a line
             {
-                char *new_line = realloc(line, line_length + buffer_pos + 1);
+                char *new_line = realloc(line, line_length + 1);
                 if (!new_line)
+                {
+                    free(line);
                     return NULL;
-
-                memcpy(new_line + line_length, buffer, buffer_pos);
-                new_line[line_length + buffer_pos] = '\0';
+                }
                 line = new_line;
-                buffer_pos++;
+                memcpy(line + line_length, buffer, buffer_pos);
+                line[line_length] = '\0';
+                buffer_pos++; // Move past the newline character
                 return line;
             }
         }
 
-        char *new_line = realloc(line, line_length + buffer_end - buffer_pos);
+        // Add remaining data in buffer to the line
+        char *new_line = realloc(line, line_length + (buffer_end - buffer_pos));
         if (!new_line)
+        {
+            free(line);
             return NULL;
-
-        memcpy(new_line + line_length, buffer + buffer_pos, buffer_end - buffer_pos);
-        line_length += buffer_end - buffer_pos;
+        }
         line = new_line;
+        memcpy(line + line_length, buffer + buffer_pos, buffer_end - buffer_pos);
+        line_length += buffer_end - buffer_pos;
         buffer_pos = buffer_end;
     }
 }
