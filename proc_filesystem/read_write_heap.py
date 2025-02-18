@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""read_write_heap: Read and write to the heap of a process"""
 import sys
 import os
 import re
