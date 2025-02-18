@@ -43,7 +43,6 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
 
             mem_file.seek(heap_start + offset)
             mem_file.write(replace_bytes)
-            print(f"Replaced '{search_string}' with '{replace_string}' in heap.")
 
     except FileNotFoundError:
         print(f"Process with PID {pid} not found.")
