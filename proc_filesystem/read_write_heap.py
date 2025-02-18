@@ -4,10 +4,12 @@ import os
 import re
 
 def usage_error():
+    """if syntax is incorrect"""
     print("Usage: read_write_heap.py pid search_string replace_string")
     sys.exit(1)
 
 def find_and_replace_in_heap(pid, search_string, replace_string):
+    """finds and replaces a string in the heap of a process"""
     try:
         with open(f"/proc/{pid}/maps", "r") as maps_file:
             heap_info = None
@@ -50,6 +52,7 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
+    """initialization"""
     if len(sys.argv) != 4:
         usage_error()
 
