@@ -4,10 +4,12 @@ import sys
 import os
 import re
 
+
 def usage_error():
     """if syntax is incorrect"""
     print("Usage: read_write_heap.py pid search_string replace_string")
     sys.exit(1)
+
 
 def find_and_replace_in_heap(pid, search_string, replace_string):
     """finds and replaces a string in the heap of a process"""
@@ -23,7 +25,8 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
                 print("Heap segment not found.")
                 return
 
-            heap_start, heap_end = [int(x, 16) for x in heap_info.split(" ")[0].split("-")]
+            heap_start, heap_end = [int(x, 16) for x in 
+                                    heap_info.split(" ")[0].split("-")]
 
         with open(f"/proc/{pid}/mem", "rb+") as mem_file:
             mem_file.seek(heap_start)
@@ -33,9 +36,10 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
             replace_bytes = replace_string.encode('ascii')
 
             if len(replace_bytes) < len(search_bytes):
-                replace_bytes = replace_bytes.ljust(len(search_bytes), b'\x00')
+                replace_bytes = replace_bytes.ljust(len(search_bytes),
+                                                    b'\x00')
             elif len(replace_bytes) > len(search_bytes):
-                print("Replacement string cannot be longer than the search string.")
+                print("Replacement string cannot be longerthan the search string.")
                 return
 
             offset = heap_data.find(search_bytes)
@@ -52,6 +56,7 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
         print("Permission denied. Try running as root.")
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 if __name__ == "__main__":
     """initialization"""
