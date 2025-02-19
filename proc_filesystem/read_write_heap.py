@@ -32,8 +32,10 @@ def find_and_replace_in_heap(pid, search_string, replace_string):
             search_bytes = search_string.encode('ascii')
             replace_bytes = replace_string.encode('ascii')
 
-            if len(search_bytes) != len(replace_bytes):
-                print("Search and replace strings must be of the same length.")
+            if len(replace_bytes) < len(search_bytes):
+                replace_bytes = replace_bytes.ljust(len(search_bytes), b'\x00')
+            elif len(replace_bytes) > len(search_bytes):
+                print("Replacement string cannot be longer than the search string.")
                 return
 
             offset = heap_data.find(search_bytes)
