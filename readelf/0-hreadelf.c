@@ -16,9 +16,13 @@ const char* get_os_abi(unsigned char osabi) {
         case ELFOSABI_TRU64: return "TRU64";
         case ELFOSABI_ARM: return "ARM architecture";
         case ELFOSABI_STANDALONE: return "Standalone (embedded)";
-        default: return "Unknown";
+        default: 
+            static char unknown[20];
+            snprintf(unknown, sizeof(unknown), "<unknown: %d>", osabi);
+            return unknown;
     }
 }
+
 
 const char* get_elf_type(uint16_t type) {
     switch (type) {
