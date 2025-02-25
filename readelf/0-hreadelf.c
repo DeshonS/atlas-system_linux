@@ -45,6 +45,7 @@ const char* get_machine_type(uint16_t machine) {
         case EM_PPC: return "PowerPC";
         case EM_SPARC: return "SPARC";
         case EM_RISCV: return "RISC-V";
+        case EM_SPARC32PLUS: return "SPARC";
         default: return "Unknown";
     }
 }
