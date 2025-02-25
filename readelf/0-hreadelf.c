@@ -18,7 +18,7 @@ const char* get_os_abi(unsigned char osabi) {
         case ELFOSABI_ARM: return "ARM architecture";
         case ELFOSABI_STANDALONE: return "Standalone (embedded)";
         default: 
-            snprintf(unknown, sizeof(unknown), "<unknown: %d>", osabi);
+            snprintf(unknown, sizeof(unknown), "<unknown: %d>", unknown);
             return unknown;
     }
 }
