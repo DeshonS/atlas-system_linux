@@ -52,7 +52,7 @@ void print_elf_header(const char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    Elf64_Ehdr ehdr;
+    Elf32_Ehdr ehdr;
     if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr)) {
         perror("Error reading ELF header");
         close(fd);
@@ -83,8 +83,8 @@ void print_elf_header(const char *filename) {
     printf("  Machine:                           %s\n", get_machine_type(ehdr.e_machine));
     printf("  Version:                           0x%x\n", ehdr.e_version);
     printf("  Entry point address:               0x%lx\n", (unsigned long)ehdr.e_entry);
-    printf("  Start of program headers:          %lu (bytes into file)\n", (unsigned long)ehdr.e_phoff);
-    printf("  Start of section headers:          %lu (bytes into file)\n", (unsigned long)ehdr.e_shoff);
+    printf("  Start of program headers:          %u (bytes into file)\n", (unsigned int)ehdr.e_phoff);
+    printf("  Start of section headers:          %u (bytes into file)\n", (unsigned int)ehdr.e_shoff);
     printf("  Flags:                             0x%x\n", ehdr.e_flags);
     printf("  Size of this header:               %u (bytes)\n", (unsigned int)ehdr.e_ehsize);
     printf("  Size of program headers:           %u (bytes)\n", (unsigned int)ehdr.e_phentsize);
