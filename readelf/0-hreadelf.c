@@ -37,7 +37,6 @@ const char* get_elf_type(uint16_t type) {
 
 const char* get_machine_type(uint16_t machine) {
     switch (machine) {
-        printf("%d", machine);
         case EM_386: return "Intel 80386";
         case EM_X86_64: return "AMD x86-64";
         case EM_ARM: return "ARM";
