@@ -44,7 +44,7 @@ const char* get_machine_type(uint16_t machine) {
         case EM_AARCH64: return "ARM AArch64";
         case EM_MIPS: return "MIPS";
         case EM_PPC: return "PowerPC";
-        case EM_SPARC: return "SPARC";
+        case EM_SPARC: return "Sparc";
         case EM_RISCV: return "RISC-V";
         default: return "Unknown";
     }
