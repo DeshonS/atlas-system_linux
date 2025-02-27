@@ -10,7 +10,7 @@ const char* get_os_abi(unsigned char osabi) {
     switch (osabi) {
         case ELFOSABI_SYSV: return "UNIX - System V";
         case ELFOSABI_HPUX: return "HP-UX";
-        case ELFOSABI_NETBSD: return "NetBSD";
+        case ELFOSABI_NETBSD: return "UNIX - NetBSD";
         case ELFOSABI_LINUX: return "Linux";
         case ELFOSABI_SOLARIS: return "UNIX - Solaris";
         case ELFOSABI_IRIX: return "IRIX";
