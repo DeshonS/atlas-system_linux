@@ -3,9 +3,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <elf.h>
-#include <arpa/inet.h>
 
 const char* get_os_abi(unsigned char osabi) {
+    static char unknown[20];
     switch (osabi) {
         case ELFOSABI_SYSV: return "UNIX - System V";
         case ELFOSABI_HPUX: return "HP-UX";
@@ -17,9 +17,12 @@ const char* get_os_abi(unsigned char osabi) {
         case ELFOSABI_TRU64: return "TRU64";
         case ELFOSABI_ARM: return "ARM architecture";
         case ELFOSABI_STANDALONE: return "Standalone (embedded)";
-        default: return "Unknown";
+        default: 
+            snprintf(unknown, sizeof(unknown), "<unknown: %x>", osabi);
+            return unknown;
     }
 }
+
 
 const char* get_elf_type(uint16_t type) {
     switch (type) {
@@ -34,13 +37,14 @@ const char* get_elf_type(uint16_t type) {
 
 const char* get_machine_type(uint16_t machine) {
     switch (machine) {
+        printf("%d", machine);
         case EM_386: return "Intel 80386";
         case EM_X86_64: return "AMD x86-64";
         case EM_ARM: return "ARM";
         case EM_AARCH64: return "ARM AArch64";
         case EM_MIPS: return "MIPS";
         case EM_PPC: return "PowerPC";
-        case EM_SPARC: return "Sparc";
+        case EM_SPARC: return "SPARC";
         case EM_RISCV: return "RISC-V";
         default: return "Unknown";
     }
@@ -69,34 +73,30 @@ void print_elf_header(const char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    int is_little_endian = (ehdr.e_ident[EI_DATA] == ELFDATA2LSB);
-    uint16_t (*conv16)(uint16_t) = is_little_endian ? le16toh : be16toh;
-    uint32_t (*conv32)(uint32_t) = is_little_endian ? le32toh : be32toh;
-
-    printf("\nELF Header:\n");
+    printf("ELF Header:\n");
     printf("  Magic:   ");
     for (int i = 0; i < EI_NIDENT; i++) {
         printf("%02x ", ehdr.e_ident[i]);
     }
     printf("\n");
     printf("  Class:                             %s\n", ehdr.e_ident[EI_CLASS] == ELFCLASS64 ? "ELF64" : "ELF32");
-    printf("  Data:                              %s\n", is_little_endian ? "2's complement, little endian" : "2's complement, big endian");
+    printf("  Data:                              %s\n", ehdr.e_ident[EI_DATA] == ELFDATA2LSB ? "2's complement, little endian" : "2's complement, big endian");
     printf("  Version:                           %d (current)\n", ehdr.e_ident[EI_VERSION]);
     printf("  OS/ABI:                            %s\n", get_os_abi(ehdr.e_ident[EI_OSABI]));
     printf("  ABI Version:                       %d\n", ehdr.e_ident[EI_ABIVERSION]);
-    printf("  Type:                              %s\n", get_elf_type(conv16(ehdr.e_type)));
-    printf("  Machine:                           %s\n", get_machine_type(conv16(ehdr.e_machine)));
-    printf("  Version:                           0x%x\n", conv32(ehdr.e_version));
-    printf("  Entry point address:               0x%x\n", conv32(ehdr.e_entry));
-    printf("  Start of program headers:          %u (bytes into file)\n", conv32(ehdr.e_phoff));
-    printf("  Start of section headers:          %u (bytes into file)\n", conv32(ehdr.e_shoff));
-    printf("  Flags:                             0x%x\n", conv32(ehdr.e_flags));
-    printf("  Size of this header:               %u (bytes)\n", conv16(ehdr.e_ehsize));
-    printf("  Size of program headers:           %u (bytes)\n", conv16(ehdr.e_phentsize));
-    printf("  Number of program headers:         %u\n", conv16(ehdr.e_phnum));
-    printf("  Size of section headers:           %u (bytes)\n", conv16(ehdr.e_shentsize));
-    printf("  Number of section headers:         %u\n", conv16(ehdr.e_shnum));
-    printf("  Section header string table index: %u\n", conv16(ehdr.e_shstrndx));
+    printf("  Type:                              %s\n", get_elf_type(ehdr.e_type));
+    printf("  Machine:                           %s\n", get_machine_type(ehdr.e_machine));
+    printf("  Version:                           0x%x\n", ehdr.e_version);
+    printf("  Entry point address:               0x%lx\n", (unsigned long)ehdr.e_entry);
+    printf("  Start of program headers:          %u (bytes into file)\n", (unsigned int)ehdr.e_phoff);
+    printf("  Start of section headers:          %u (bytes into file)\n", (unsigned int)ehdr.e_shoff);
+    printf("  Flags:                             0x%x\n", ehdr.e_flags);
+    printf("  Size of this header:               %u (bytes)\n", (unsigned int)ehdr.e_ehsize);
+    printf("  Size of program headers:           %u (bytes)\n", (unsigned int)ehdr.e_phentsize);
+    printf("  Number of program headers:         %u\n", (unsigned int)ehdr.e_phnum);
+    printf("  Size of section headers:           %u (bytes)\n", (unsigned int)ehdr.e_shentsize);
+    printf("  Number of section headers:         %u\n", (unsigned int)ehdr.e_shnum);
+    printf("  Section header string table index: %u\n", (unsigned int)ehdr.e_shstrndx);
     
     close(fd);
 }
