@@ -5,9 +5,11 @@
 #include <elf.h>
 #include <arpa/inet.h>
 
-const char* get_os_abi(unsigned char osabi) {
+const char* get_os_abi(unsigned char osabi)
+{
     static char unknown[20];
-    switch (osabi) {
+    switch (osabi)
+    {
         case ELFOSABI_SYSV: return "UNIX - System V";
         case ELFOSABI_HPUX: return "HP-UX";
         case ELFOSABI_NETBSD: return "UNIX - NetBSD";
@@ -24,8 +26,10 @@ const char* get_os_abi(unsigned char osabi) {
     }
 }
 
-const char* get_elf_type(uint16_t type) {
-    switch (type) {
+const char* get_elf_type(uint16_t type)
+{
+    switch (type)
+    {
         case ET_NONE: return "NONE (No file type)";
         case ET_REL: return "REL (Relocatable file)";
         case ET_EXEC: return "EXEC (Executable file)";
@@ -35,8 +39,10 @@ const char* get_elf_type(uint16_t type) {
     }
 }
 
-const char* get_machine_type(uint16_t machine) {
-    switch (machine) {
+const char* get_machine_type(uint16_t machine)
+{
+    switch (machine)
+    {
         case EM_386: return "Intel 80386";
         case EM_X86_64: return "Advanced Micro Devices X86-64";
         case EM_ARM: return "ARM";
@@ -49,15 +55,18 @@ const char* get_machine_type(uint16_t machine) {
     }
 }
 
-void print_elf_header(const char *filename) {
+void print_elf_header(const char *filename)
+{
     int fd = open(filename, O_RDONLY);
-    if (fd < 0) {
+    if (fd < 0)
+    {
         perror("Error opening file");
         exit(EXIT_FAILURE);
     }
 
     unsigned char e_ident[EI_NIDENT];
-    if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT) {
+    if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT)
+    {
         perror("Error reading ELF identifier");
         close(fd);
         exit(EXIT_FAILURE);
@@ -66,7 +75,8 @@ void print_elf_header(const char *filename) {
     if (e_ident[EI_MAG0] != ELFMAG0 ||
         e_ident[EI_MAG1] != ELFMAG1 ||
         e_ident[EI_MAG2] != ELFMAG2 ||
-        e_ident[EI_MAG3] != ELFMAG3) {
+        e_ident[EI_MAG3] != ELFMAG3)
+        {
         fprintf(stderr, "Not an ELF file\n");
         close(fd);
         exit(EXIT_FAILURE);
@@ -79,7 +89,8 @@ void print_elf_header(const char *filename) {
 
     int is_elf32 = (e_ident[EI_CLASS] == ELFCLASS32);
     
-    if (lseek(fd, 0, SEEK_SET) < 0) {
+    if (lseek(fd, 0, SEEK_SET) < 0)
+    {
         perror("Error seeking to ELF header");
         close(fd);
         exit(EXIT_FAILURE);
@@ -87,7 +98,8 @@ void print_elf_header(const char *filename) {
 
     printf("ELF Header:\n");
     printf("  Magic:   ");
-    for (int i = 0; i < EI_NIDENT; i++) {
+    for (int i = 0; i < EI_NIDENT; i++)
+    {
         printf("%02x ", e_ident[i]);
     }
     printf("\n");
@@ -98,9 +110,11 @@ void print_elf_header(const char *filename) {
     printf("  OS/ABI:                            %s\n", get_os_abi(e_ident[EI_OSABI]));
     printf("  ABI Version:                       %d\n", e_ident[EI_ABIVERSION]);
 
-    if (is_elf32) {
+    if (is_elf32)
+    {
         Elf32_Ehdr ehdr;
-        if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr)) {
+        if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
+        {
             perror("Error reading ELF32 header");
             close(fd);
             exit(EXIT_FAILURE);
@@ -122,7 +136,8 @@ void print_elf_header(const char *filename) {
 
     } else {
         Elf64_Ehdr ehdr;
-        if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr)) {
+        if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
+        {
             perror("Error reading ELF64 header");
             close(fd);
             exit(EXIT_FAILURE);
@@ -146,8 +161,10 @@ void print_elf_header(const char *filename) {
     close(fd);
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
+    {
         fprintf(stderr, "Usage: %s elf_filename\n", argv[0]);
         return EXIT_FAILURE;
     }
