@@ -16,7 +16,7 @@ asm_strcmp:
     jmp .loop
 
 .done:
-    movsx eax, al
-    movsx edx, dl
+    movzx eax, al
+    movzx edx, dl
     sub eax, edx
     ret
