@@ -5,7 +5,68 @@
 #include <elf.h>
 #include <arpa/inet.h>
 
-const char* get_os_abi(unsigned char osabi)
+const char*       case ELFOSABI_HPUX: return "HP-UX";
+case ELFOSABI_NETBSD: return "UNIX - NetBSD";
+case ELFOSABI_LINUX: return "Linux";
+case ELFOSABI_SOLARIS: return "UNIX - Solaris";
+case ELFOSABI_IRIX: return "IRIX";
+case ELFOSABI_FREEBSD: return "FreeBSD";
+case ELFOSABI_TRU64: return "TRU64";
+case ELFOSABI_ARM: return "ARM architecture";
+case ELFOSABI_STANDALONE: return "Standalone (embedded)";
+default: 
+    snprintf(unknown, sizeof(unknown), "<unknown: %x>", osabi);
+    return unknown;
+}
+}
+
+const char* get_elf_type(uint16_t type)
+{
+switch (type)
+{
+case ET_NONE: return "NONE (No file type)";
+case ET_REL: return "REL (Relocatable file)";
+case ET_EXEC: return "EXEC (Executable file)";
+case ET_DYN: return "DYN (Shared object file)";
+case ET_CORE: return "CORE (Core file)";
+default: return "Unknown";
+}
+}
+
+const char* get_machine_type(uint16_t machine)
+{
+switch (machine)
+{
+case EM_386: return "Intel 80386";
+case EM_X86_64: return "Advanced Micro Devices X86-64";
+case EM_ARM: return "ARM";
+case EM_AARCH64: return "ARM AArch64";
+case EM_MIPS: return "MIPS";
+case EM_PPC: return "PowerPC";
+case EM_SPARC: return "Sparc";
+case EM_RISCV: return "RISC-V";
+default: return "Unknown";
+}
+}
+
+void print_elf_header(const char *filename)
+{
+int fd = open(filename, O_RDONLY);
+if (fd < 0)
+{
+perror("Error opening file");
+exit(EXIT_FAILURE);
+}
+
+unsigned char e_ident[EI_NIDENT];
+if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT)
+{
+perror("Error reading ELF identifier");
+close(fd);
+exit(EXIT_FAILURE);
+}
+
+if (e_ident[EI_MAG0] != EL get_os_abi(unsigned char osabi)
 {
     static char unknown[20];
     switch (osabi)
