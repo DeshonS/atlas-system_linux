@@ -5,8 +5,8 @@ asm_strcmp:
     xor rax, rax
 
 .loop:
-    movzx rax, byte [rdi]
-    movzx rdx, byte [rsi]
+    movzx eax, byte [rdi]
+    movzx edx, byte [rsi]
     cmp al, dl
     jne .done
     test al, al
