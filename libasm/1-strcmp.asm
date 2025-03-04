@@ -1,7 +1,7 @@
 section .text
-global my_strcmp
+global asm_strcmp
 
-my_strcmp:
+asm_strcmp:
     xor rax, rax           ; Set RAX (result) to 0
 .next_char:
     mov al, [rdi]          ; Load byte from first string
