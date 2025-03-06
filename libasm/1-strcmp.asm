@@ -15,6 +15,6 @@ asm_strcmp:
     jmp .next_char        ; Repeat the comparison for the next characters
 .diff:
     sub al, dl            ; Compute the difference between the two bytes
-    mov rax, al         ; Sign-extend AL to RAX
+    movzx rax, al         ; Sign-extend AL to RAX
 .done:
     ret
