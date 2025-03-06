@@ -18,7 +18,7 @@ asm_strpbrk:
     cmp cl, dl
     je .found
 
-    inc rbx           
+    inc rbx
     jmp .next_char
 
 .continue_search:
