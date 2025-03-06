@@ -5,18 +5,18 @@ global asm_strcmp
 asm_strcmp:
     xor rax, rax
 .next_char:
-    movzx rax, byte [rdi]
-    movzx rdx, byte [rsi]
-    cmp rax, rdx
+    mov al, byte [rdi]
+    mov dl, byte [rsi]
+    cmp al, dl
     jne .diff
-    test rax, rax
+    test al, al
     je .done
     inc rdi
     inc rsi
     jmp .next_char
 .diff:
-    movsx rax, byte [rdi]
-    movsx rdx, byte [rsi]
+    movsx rax, al
+    movsx rdx, dl
     sub rax, rdx
 .done:
     ret
