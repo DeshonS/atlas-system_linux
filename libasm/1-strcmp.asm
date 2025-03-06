@@ -15,6 +15,8 @@ asm_strcmp:
     inc rsi
     jmp .next_char
 .diff:
+    movsx rax, byte [rdi]
+    movsx rdx, byte [rsi]
     sub rax, rdx
 .done:
     ret
