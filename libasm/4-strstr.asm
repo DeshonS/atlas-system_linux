@@ -3,12 +3,15 @@ section .text
 
 asm_strstr:
     mov rax, rdi
-    test rsi, rsi
+    mov rbx, rsi
+
+    mov cl, byte [rbx]
+    test cl, cl
     jz .return_haystack
-    
+
 .next_start:
     mov rdx, rax
-    mov rcx, rsi
+    mov rcx, rbx
 
 .loop:
     mov bl, byte [rcx]
@@ -34,7 +37,6 @@ asm_strstr:
     ret
 
 .found:
-    mov rax, rdi
     ret
 
 .return_haystack:
