@@ -1,20 +1,20 @@
+bits 64
 section .text
 global asm_strcmp
 
 asm_strcmp:
     xor rax, rax
 .next_char:
-    mov al, [rdi]
-    mov dl, [rsi]
-    cmp al, dl
+    movzx rax, byte [rdi]
+    movzx rdx, byte [rsi]
+    cmp rax, rdx
     jne .diff
-    test al, al
+    test rax, rax
     je .done
     inc rdi
     inc rsi
     jmp .next_char
 .diff:
-    sub al, dl
-    movsx rax, al
+    sub rax, rdx
 .done:
     ret
