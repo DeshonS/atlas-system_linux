@@ -2,47 +2,47 @@ section .text
     global asm_strstr
 
 asm_strstr:
-    mov eax, edi           
-    test esi, esi          
+    mov rax, rdi           
+    test rsi, rsi          
     jz .return_haystack    
 
-    mov cl, byte [esi]     
+    mov cl, byte [rsi]     
     test cl, cl            
     jz .return_haystack    
 
 .next_start:
-    mov edx, eax           
-    mov ecx, esi           
+    mov rdx, rax           
+    mov rcx, rsi           
 
 .loop:
-    mov bl, byte [ecx]     
+    mov bl, byte [rcx]     
     test bl, bl            
     jz .found              
-    mov al, byte [edx]     
+    mov al, byte [rdx]     
     test al, al            
     jz .not_found          
     cmp al, bl             
     jne .continue_search   
-    inc edx                
-    inc ecx                
+    inc rdx                
+    inc rcx                
     jmp .loop              
 
 .continue_search:
-    inc eax                
-    mov dl, byte [eax]     
+    inc rax                
+    mov dl, byte [rax]     
     test dl, dl            
     jnz .next_start        
 
 .not_found:
-    xor eax, eax           
+    xor rax, rax           
     ret                    
 
 .found:
-    mov eax, edi           
-    add eax, edi           
-    sub eax, edx           
+    mov rax, rdi
+    add rax, rdi           
+    sub rax, rdx           
     ret                    
 
 .return_haystack:
-    mov eax, edi           
+    mov rax, rdi           
     ret
