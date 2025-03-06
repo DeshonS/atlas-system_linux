@@ -9,8 +9,8 @@ asm_strcasecmp:
     jz      .null_pointer
 
     .loop:
-        movsx   rdx, byte [rdi]
-        movsx   rcx, byte [rsi]
+        mov   rdx, byte [rdi]
+        mov   rcx, byte [rsi]
         or      rdx, 0x20
         or      rcx, 0x20
         cmp     rdx, rcx
