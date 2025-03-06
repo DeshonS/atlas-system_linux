@@ -2,12 +2,15 @@ section .text
     global asm_putc
 
 asm_putc:
-    mov     eax, 1
-    mov     rdi, 1
-    mov     rsi, rsp
+    sub     rsp, 8
     mov     byte [rsp], dil
-    mov     rdx, 1
+
+    mov     eax, 1
+    mov     edi, 1
+    mov     rsi, rsp
+    mov     edx, 1
     syscall
-    
-    mov     rax, 1
+
+    add     rsp, 8
+    mov     eax, 1
     ret
