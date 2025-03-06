@@ -3,8 +3,8 @@ section .text
 
 asm_strcasecmp:
     .loop:
-        movzx rdx, byte [rdi]
-        movzx rcx, byte [rsi]
+        mov rdx, byte [rdi]
+        mov rcx, byte [rsi]
         or     rdx, 0x20
         or     rcx, 0x20
         cmp    rdx, rcx
