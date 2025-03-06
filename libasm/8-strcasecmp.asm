@@ -3,24 +3,24 @@ section .text
 
 asm_strcasecmp:
     .loop:
-        movzx edx, byte [edi]
-        movzx ecx, byte [esi]
-        or     edx, 0x20
-        or     ecx, 0x20
-        cmp    edx, ecx
+        movzx rdx, byte [rdi]
+        movzx rcx, byte [rsi]
+        or     rdx, 0x20
+        or     rcx, 0x20
+        cmp    rdx, rcx
         jne    .not_equal
-        test   edx, edx
+        test   rdx, rdx
         jz     .equal
-        inc    edi
-        inc    esi
+        inc    rdi
+        inc    rsi
         jmp    .loop
 
     .not_equal:
-        sub    eax, eax
+        sub    rax, rax
         mov    al, dl
         sub    al, cl
         ret
 
     .equal:
-        xor    eax, eax
+        xor    rax, rax
         ret
