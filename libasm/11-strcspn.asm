@@ -2,27 +2,29 @@ section .text
     global asm_strcspn
 
 asm_strcspn:
-    xor rax, rax
+    xor rcx, rcx
 
-.loop:
-    mov al, byte [rdi + rax]
+.loop_s: 
+    mov al, [rdi + rcx]
     test al, al
-    jz .done
+    je .done
 
     mov rbx, rsi
-.next_char:
-    mov dl, byte [rbx]
+
+.loop_reject:
+    mov dl, [rbx]
     test dl, dl
-    jz .continue_search
+    je .done
+
     cmp al, dl
     je .done
 
     inc rbx
-    jmp .next_char
+    jmp .loop_reject
 
-.continue_search:
-    inc rax
-    jmp .loop
+    inc rcx
+    jmp .loop_s
 
 .done:
+    mov rax, rcx
     ret
