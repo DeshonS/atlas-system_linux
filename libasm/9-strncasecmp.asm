@@ -2,31 +2,46 @@ section .text
     global asm_strncasecmp
 
 asm_strncasecmp:
+    test rdx, rdx
+    je .done_zero
+
 .loop:
-    test    rdx, rdx
-    jz      .done
+    test rdx, rdx
+    je .done_zero
 
-    mov     al, byte [rdi]
-    mov     bl, byte [rsi]
+    mov al, byte [rdi]
+    mov dl, byte [rsi]
 
-    or      al, 0x20
-    or      bl, 0x20
+    cmp al, 'A'
+    jl .skip1
+    cmp al, 'Z'
+    jg .skip1
+    add al, 32
 
-    cmp     al, bl
-    jne     .not_equal
+.skip1:
+    cmp dl, 'A'
+    jl .skip2
+    cmp dl, 'Z'
+    jg .skip2
+    add dl, 32
 
-    test    al, al
-    jz      .done
+.skip2:
+    cmp al, dl
+    jne .done
 
-    inc     rdi
-    inc     rsi
-    dec     rdx
-    jmp     .loop
+    test al, al
+    je .done
 
-.not_equal:
-    sub     al, bl
-    ret
+    dec rdx
+    inc rdi
+    inc rsi
+    jmp .loop
 
 .done:
-    xor     eax, eax
+    sub al, dl
+    movsx eax, al
+    ret
+
+.done_zero:
+    xor eax, eax
     ret
