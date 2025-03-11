@@ -2,37 +2,33 @@ section .text
     global asm_strcasecmp
 
 asm_strcasecmp:
-    test    rdi, rdi
-    jz      .null_pointer
+.loop:
+    mov al, byte [rdi]
+    mov dl, byte [rsi]
 
-    test    rsi, rsi
-    jz      .null_pointer
+    cmp al, 'A'
+    jl .skip1
+    cmp al, 'Z'
+    jg .skip1
+    add al, 32
 
-    .loop:
-        mov   rdx, byte [rdi]
-        mov   rcx, byte [rsi]
-        or      rdx, 0x20
-        or      rcx, 0x20
-        cmp     rdx, rcx
-        jne     .not_equal
+.skip1:
+    cmp dl, 'A'
+    jl .skip2
+    cmp dl, 'Z'
+    jg .skip2
+    add dl, 32
 
-        test    rdx, rdx
-        jz      .equal
+.skip2:
+    cmp al, dl
+    jne .done
+    test al, al
+    je .done
+    inc rdi
+    inc rsi
+    jmp .loop
 
-        inc     rdi
-        inc     rsi
-        jmp     .loop
-
-    .not_equal:
-        sub     rax, rax
-        mov     al, dl
-        sub     al, cl
-        ret
-
-    .equal:
-        xor     rax, rax
-        ret
-
-    .null_pointer:
-        xor     rax, rax
-        ret
+.done:
+    sub al, dl
+    movsx eax, al
+    ret
