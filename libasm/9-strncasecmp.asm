@@ -12,6 +12,11 @@ asm_strncasecmp:
     mov al, byte [rdi]
     mov dl, byte [rsi]
 
+    test al, al
+    je .done
+    test dl, dl
+    je .done
+
     cmp al, 'A'
     jl .skip1
     cmp al, 'Z'
@@ -28,9 +33,6 @@ asm_strncasecmp:
 .skip2:
     cmp al, dl
     jne .done
-
-    test al, al
-    je .done
 
     dec rdx
     inc rdi
