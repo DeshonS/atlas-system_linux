@@ -12,9 +12,9 @@ asm_strncasecmp:
     mov al, byte [rdi]
     mov dl, byte [rsi]
 
-    test al, al
+    cmp al, 0
     je .done
-    test dl, dl
+    cmp dl, 0
     je .done
 
     cmp al, 'A'
