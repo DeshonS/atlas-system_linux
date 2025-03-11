@@ -4,7 +4,7 @@ section .text
 asm_strspn:
     xor rcx, rcx
 
-.loop_s: 
+.loop_s:
     mov al, [rdi + rcx]
     test al, al
     je .done
