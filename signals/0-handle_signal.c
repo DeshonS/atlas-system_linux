@@ -5,15 +5,15 @@
 
 void handler(int signum)
 {
-    printf("Gotcha! [%d]\n", signum);
-    fflush(stdout);
+	printf("Gotcha! [%d]\n", signum);
+	fflush(stdout);
 }
 
 int handle_signal(void)
 {
-    if (signal(SIGINT, handler) == SIG_ERR)
-    {
-        return (-1);
-    }
-    return (0);
+	if (signal(SIGINT, handler) == SIG_ERR)
+	{
+		return (-1);
+	}
+	return (0);
 }
