@@ -5,9 +5,10 @@
  * @signum: sender process ID
  */
 
-void handler(void)
+void handler(int signum)
 {
 	pid_t sent = getpid();
+	(void)signum;
 	printf("^\nSIGQUIT sent by %d\n", sent);
 }
 
