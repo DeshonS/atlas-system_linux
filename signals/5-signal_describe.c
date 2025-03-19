@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
         case 2:  printf("2: Interrupt\n"); break;
         case 3:  printf("3: Quit\n"); break;
 		case 4:  printf("4: Illegal instruction\n"); break;
-		case 5:  printf("5: Trace/BPT trap\n"); break;
+		case 5:  printf("5: Trace/breakpoint trap\n"); break;
 		case 6:  printf("6: Abort\n"); break;
 		case 7:  printf("7: Bus error\n"); break;
 		case 8:  printf("8: Floating point exception\n"); break;
