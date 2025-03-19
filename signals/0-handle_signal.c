@@ -17,7 +17,7 @@ void handler(int signum)
 
 /**
  * handle_signal - sets handle for SIGINT signal
- * return: 0 for success, -1 for failure
+ * Return: 0 for success, -1 for failure
  */
 
 int handle_signal(void)
