@@ -5,7 +5,6 @@
  * @sig: signal number
  * @info: pointer to siginfo_t
  * @context: pointer to context
- * @signum: sender process ID
  */
 
 void trace_handler(int sig, siginfo_t *info, void *context)
