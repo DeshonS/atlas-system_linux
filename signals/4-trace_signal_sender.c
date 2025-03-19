@@ -5,11 +5,11 @@
  * @signum: sender process ID
  */
 
-void handler(int signum)
+void handler(int sig, singinfo_t *info, void *context)
 {
-	pid_t sent = getpid();
-	(void)signum;
-	printf("^\nSIGQUIT sent by %d\n", sent);
+	(void)sig;
+	(void)context;
+	printf("^\nSIGQUIT sent by %d\n", info->si_pid);
 }
 
 /**
@@ -19,7 +19,11 @@ void handler(int signum)
 
 int trace_signal_sender(void)
 {
-	if (signal(SIGQUIT, handler) == SIG_ERR)
+	struct sigaction sa;
+
+	sa.sa_sigaction = handler;
+	sa.sa_flags = SA_SIGINFO;
+	if (sigaction(SIGQUIT, &sa, NULL) == -1)
 	{
 		return (-1);
 	}
