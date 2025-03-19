@@ -5,8 +5,8 @@
  * Return: Pointer to the handler function or NULL if fail
  */
 
- void (*current_handler_signal(void))(int)
- {
+void (*current_handler_signal(void))(int)
+{
     void (*handler)(int);
 
     handler = signal(SIGINT, SIG_IGN);
@@ -16,4 +16,4 @@
     }
     signal(SIGINT, handler);
     return (handler);
- }
+}
