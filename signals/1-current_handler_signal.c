@@ -7,13 +7,13 @@
 
 void (*current_handler_signal(void))(int)
 {
-    void (*handler)(int);
+	void (*handler)(int);
 
-    handler = signal(SIGINT, SIG_IGN);
-    if (handler == SIG_ERR)
-    {
-        return (NULL);
-    }
-    signal(SIGINT, handler);
-    return (handler);
+	handler = signal(SIGINT, SIG_IGN);
+	if (handler == SIG_ERR)
+	{
+		return (NULL);
+	}
+	signal(SIGINT, handler);
+	return (handler);
 }
