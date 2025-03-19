@@ -9,7 +9,7 @@ void handler(int signum)
 
 int handle_signal(void)
 {
-    if (signal(SIGINT, handle_signal) == SIG_ERR)
+    if (signal(SIGINT, handler) == SIG_ERR)
     {
         return (-1);
     }
