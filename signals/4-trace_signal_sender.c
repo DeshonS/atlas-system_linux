@@ -5,7 +5,7 @@
  * @signum: sender process ID
  */
 
-void handler(int sig, siginfo_t *info, void *context)
+void trace_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
@@ -21,7 +21,7 @@ int trace_signal_sender(void)
 {
 	struct sigaction sa;
 
-	sa.sa_sigaction = handler;
+	sa.sa_sigaction = trace_handler;
 	sa.sa_flags = SA_SIGINFO;
 	if (sigaction(SIGQUIT, &sa, NULL) == -1)
 	{
