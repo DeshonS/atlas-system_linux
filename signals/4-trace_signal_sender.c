@@ -1,7 +1,10 @@
 #include "signals.h"
 
 /**
- * handler - custom handler
+ * trace_handler - custom handler
+ * @sig: signal number
+ * @info: pointer to siginfo_t
+ * @context: pointer to context
  * @signum: sender process ID
  */
 
