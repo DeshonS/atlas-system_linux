@@ -9,7 +9,7 @@ void handler(int signum)
 {
 	printf("Caught %d\n", signum);
 	printf("Signal received\n");
-	_exit(EXIT_SUCCESS);
+	raise(SIGQUIT);
 }
 
 /**
