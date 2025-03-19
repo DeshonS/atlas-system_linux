@@ -3,11 +3,22 @@
 #include <signal.h>
 #include <unistd.h>
 
+/**
+ * handler - custom function for SIGINT handling
+ * @signum: signal number
+ * return: void
+ */
+
 void handler(int signum)
 {
 	printf("Gotcha! [%d]\n", signum);
 	fflush(stdout);
 }
+
+/**
+ * handle_signal - sets handle for SIGINT signal
+ * return: 0 for success, -1 for failure
+ */
 
 int handle_signal(void)
 {
