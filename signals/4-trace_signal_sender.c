@@ -5,7 +5,7 @@
  * @signum: sender process ID
  */
 
-void handler(int sig, singinfo_t *info, void *context)
+void handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
