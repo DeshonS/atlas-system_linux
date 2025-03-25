@@ -2,63 +2,51 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <gelf.h>
-#include <libelf.h>
-#include <errno.h>
+#include <string.h>
+#include <elf.h>
 
 void print_symbols(const char *filename) {
-    int fd;
-    Elf *elf;
-    Elf_Scn *scn = NULL;
-    GElf_Shdr shdr;
-    Elf_Data *data;
-    size_t shstrndx;
-
-    if (elf_version(EV_CURRENT) == EV_NONE) {
-        fprintf(stderr, "ELF library initialization failed: %s\n", elf_errmsg(-1));
-        exit(EXIT_FAILURE);
-    }
-
-    if ((fd = open(filename, O_RDONLY, 0)) < 0) {
+    int fd = open(filename, O_RDONLY);
+    if (fd < 0) {
         perror("open");
-        exit(EXIT_FAILURE);
+        return;
     }
 
-    if ((elf = elf_begin(fd, ELF_C_READ, NULL)) == NULL) {
-        fprintf(stderr, "elf_begin() failed: %s\n", elf_errmsg(-1));
-        exit(EXIT_FAILURE);
-    }
+    Elf64_Ehdr ehdr;
+    read(fd, &ehdr, sizeof(ehdr));
 
-    if (elf_getshdrstrndx(elf, &shstrndx) != 0) {
-        fprintf(stderr, "elf_getshdrstrndx() failed: %s\n", elf_errmsg(-1));
-        exit(EXIT_FAILURE);
-    }
+    lseek(fd, ehdr.e_shoff, SEEK_SET);
+    Elf64_Shdr shdrs[ehdr.e_shnum];
+    read(fd, shdrs, ehdr.e_shnum * sizeof(Elf64_Shdr));
 
-    while ((scn = elf_nextscn(elf, scn)) != NULL) {
-        if (gelf_getshdr(scn, &shdr) != &shdr) {
-            fprintf(stderr, "gelf_getshdr() failed: %s\n", elf_errmsg(-1));
-            exit(EXIT_FAILURE);
-        }
+    char *shstrtab;
+    lseek(fd, shdrs[ehdr.e_shstrndx].sh_offset, SEEK_SET);
+    shstrtab = malloc(shdrs[ehdr.e_shstrndx].sh_size);
+    read(fd, shstrtab, shdrs[ehdr.e_shstrndx].sh_size);
 
-        if (shdr.sh_type == SHT_SYMTAB || shdr.sh_type == SHT_DYNSYM) {
-            data = elf_getdata(scn, NULL);
-            int count = shdr.sh_size / shdr.sh_entsize;
+    for (int i = 0; i < ehdr.e_shnum; i++) {
+        if (shdrs[i].sh_type == SHT_SYMTAB || shdrs[i].sh_type == SHT_DYNSYM) {
+            Elf64_Sym *symbols = malloc(shdrs[i].sh_size);
+            lseek(fd, shdrs[i].sh_offset, SEEK_SET);
+            read(fd, symbols, shdrs[i].sh_size);
+            int num_symbols = shdrs[i].sh_size / sizeof(Elf64_Sym);
 
-            for (int i = 0; i < count; i++) {
-                GElf_Sym sym;
-                if (gelf_getsym(data, i, &sym) != &sym) {
-                    fprintf(stderr, "gelf_getsym() failed: %s\n", elf_errmsg(-1));
-                    exit(EXIT_FAILURE);
-                }
+            char *strtab;
+            lseek(fd, shdrs[shdrs[i].sh_link].sh_offset, SEEK_SET);
+            strtab = malloc(shdrs[shdrs[i].sh_link].sh_size);
+            read(fd, strtab, shdrs[shdrs[i].sh_link].sh_size);
 
-                printf("%016lx %c %s\n", sym.st_value,
-                       GELF_ST_BIND(sym.st_info) == STB_GLOBAL ? 'T' : 't',
-                       elf_strptr(elf, shdr.sh_link, sym.st_name));
+            for (int j = 0; j < num_symbols; j++) {
+                printf("%016lx %c %s\n", symbols[j].st_value,
+                       (ELF64_ST_BIND(symbols[j].st_info) == STB_GLOBAL) ? 'T' : 't',
+                       &strtab[symbols[j].st_name]);
             }
+            free(symbols);
+            free(strtab);
         }
     }
 
-    elf_end(elf);
+    free(shstrtab);
     close(fd);
 }
 
@@ -67,10 +55,8 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: %s [objfile ...]\n", argv[0]);
         return EXIT_FAILURE;
     }
-
     for (int i = 1; i < argc; i++) {
         print_symbols(argv[i]);
     }
-
     return EXIT_SUCCESS;
 }
