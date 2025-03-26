@@ -1,62 +1,62 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <elf.h>
 
-void print_symbols(const char *filename) {
+void process_elf(const char *filename)
+{
     int fd = open(filename, O_RDONLY);
-    if (fd < 0) {
+    if (fd < 0)
+    {
         perror("open");
         return;
     }
 
-    Elf64_Ehdr ehdr;
-    read(fd, &ehdr, sizeof(ehdr));
-
-    lseek(fd, ehdr.e_shoff, SEEK_SET);
-    Elf64_Shdr shdrs[ehdr.e_shnum];
-    read(fd, shdrs, ehdr.e_shnum * sizeof(Elf64_Shdr));
-
-    char *shstrtab;
-    lseek(fd, shdrs[ehdr.e_shstrndx].sh_offset, SEEK_SET);
-    shstrtab = malloc(shdrs[ehdr.e_shstrndx].sh_size);
-    read(fd, shstrtab, shdrs[ehdr.e_shstrndx].sh_size);
-
-    for (int i = 0; i < ehdr.e_shnum; i++) {
-        if (shdrs[i].sh_type == SHT_SYMTAB || shdrs[i].sh_type == SHT_DYNSYM) {
-            Elf64_Sym *symbols = malloc(shdrs[i].sh_size);
-            lseek(fd, shdrs[i].sh_offset, SEEK_SET);
-            read(fd, symbols, shdrs[i].sh_size);
-            int num_symbols = shdrs[i].sh_size / sizeof(Elf64_Sym);
-
-            char *strtab;
-            lseek(fd, shdrs[shdrs[i].sh_link].sh_offset, SEEK_SET);
-            strtab = malloc(shdrs[shdrs[i].sh_link].sh_size);
-            read(fd, strtab, shdrs[shdrs[i].sh_link].sh_size);
-
-            for (int j = 0; j < num_symbols; j++) {
-                printf("%016lx %c %s\n", symbols[j].st_value,
-                       (ELF64_ST_BIND(symbols[j].st_info) == STB_GLOBAL) ? 'T' : 't',
-                       &strtab[symbols[j].st_name]);
-            }
-            free(symbols);
-            free(strtab);
-        }
+    struct stat st;
+    if (fstat(fd, &st) < 0)
+    {
+        perror("fstat");
+        close(fd);
+        return;
     }
 
-    free(shstrtab);
+    void *map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (map == MAP_FAILED)
+    {
+        perror("mmap");
+        close(fd);
+        return;
+    }
+
+    Elf64_Ehdr *ehdr = (Elf64_Ehdr *)map;
+    if (ehdr->e_ident[EI_MAG0] != ELFMAG0 ||
+        ehdr->e_ident[EI_MAG1] != ELFMAG1 ||
+        ehdr->e_ident[EI_MAG2] != ELFMAG2 ||
+        ehdr->e_ident[EI_MAG3] != ELFMAG3)
+        {
+        fprintf(stderr, "%s: Not a valid ELF file\n", filename);
+        munmap(map, st.st_size);
+        close(fd);
+        return;
+    }
+    munmap(map, st.st_size);
     close(fd);
 }
 
-int main(int argc, char **argv) {
-    if (argc < 2) {
+int main(int argc, char **argv)
+{
+    if (argc < 2)
+    {
         fprintf(stderr, "Usage: %s [objfile ...]\n", argv[0]);
         return EXIT_FAILURE;
     }
-    for (int i = 1; i < argc; i++) {
-        print_symbols(argv[i]);
+    for (int i = 1; i < argc; i++)
+    {
+        process_elf(argv[i]);
     }
     return EXIT_SUCCESS;
 }
