@@ -8,7 +8,7 @@
                 "_UNICODE"
             ],
             "intelliSenseMode": "windows-clang-x64",
-            "compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+            "compilerPath": "/home/deshons/.cache/motd.legal-displayed",
             "includePath": [
                 "${workspaceFolder}/**"
             ]

@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
     "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/gcc.exe"
+=======
+    "C_Cpp.default.compilerPath": "/home/deshons/.cache/motd.legal-displayed"
+>>>>>>> d5654ca4f03611074a5ddf116437b4054fb6660a
 }
