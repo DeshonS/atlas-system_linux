@@ -76,6 +76,6 @@ void print_python_float(PyObject *p)
 	}
 	double value = ((PyFloatObject *)p)->ob_fval;
 	printf("[.] float object info\n");
-	printf("  value: %.1f\n", value);
+	printf("  value: %.01f\n", value);
 
 }
