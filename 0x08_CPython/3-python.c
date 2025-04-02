@@ -25,7 +25,7 @@ void print_python_list(PyObject *p)
 		{
 			print_python_bytes(list->ob_item[i]);
 		}
-		if (PyFloat_Check(item))
+		if (strcmp(type, "float") == 0)
 		{
 			print_python_float(list->ob_item[i]);
 		}
