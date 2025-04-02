@@ -1,4 +1,4 @@
-#include <python.h>
+#include <Python.h>
 
 void print_python_list(PyObject *p);
 
