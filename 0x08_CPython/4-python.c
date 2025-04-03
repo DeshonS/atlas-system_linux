@@ -10,8 +10,8 @@ void print_python_string(PyObject *p)
 		printf("  [ERROR] Invalid String Object\n");
 		return;
 	}
-	char value = ((PyUnicodeObject *)p)->AsUTF8;
-	int size = ((PyUnicodeObject *)p)->length;
+	char value = PyUnicode_AsUTF8(p);
+	Py_ssize_t size = PyUnicode_GET_SIZE(p);
 	printf("[.] string object info\n");
 	/*printf("  type: %s\n", type);*/
 	printf("  length: %ld\n", size);
