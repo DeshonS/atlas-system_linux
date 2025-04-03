@@ -11,7 +11,7 @@ void print_python_string(PyObject *p)
 		return;
 	}
 	char value = ((PyUnicodeObject *)p)->ob_name;
-	int type = ((PyUnicodeObject *)p)->ob_type;
+	const char *type = list->ob_item->ob_type->tp_name;
 	int size = ((PyUnicodeObject *)p)->ob_size;
 	printf("[.] string object info\n");
 	printf("  type: %s\n", type);
