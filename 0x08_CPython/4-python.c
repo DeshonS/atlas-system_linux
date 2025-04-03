@@ -10,10 +10,11 @@ void print_python_string(PyObject *p)
 		printf("  [ERROR] Invalid String Object\n");
 		return;
 	}
-	char value = ((PyUnicodeObject *)p)->tp_name;
+	char value = ((PyUnicodeObject *)p)->ob_name;
+	int type = ((PyUnicodeObject *)p)->ob_type;
 	int size = ((PyUnicodeObject *)p)->ob_size;
 	printf("[.] string object info\n");
-	/*printf("  type: %s\n");*/
-	printf("  length: %d\n" size);
+	printf("  type: %s\n", type);
+	printf("  length: %ld\n", size);
 	printf("  value: %s\n", value);
 }
