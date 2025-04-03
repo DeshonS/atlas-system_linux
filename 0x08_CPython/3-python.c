@@ -72,7 +72,7 @@ void print_python_float(PyObject *p)
 	if (!PyFloat_Check(p))
 	{
 		printf("[.] float object info\n");
-		printf("[ERROR] Invalid Float Object\n");
+		printf("  [ERROR] Invalid Float Object\n");
 		return;
 	}
 	double value = ((PyFloatObject *)p)->ob_fval;
