@@ -78,7 +78,7 @@ void print_python_float(PyObject *p)
 	printf("[.] float object info\n");
 	if (value == 1 || value == -1 || value == 0)
 	{
-		printf("  value: %d.0\n", value);
+		printf("  value: %.16g.0\n", value);
 	}
 	else
 	{
