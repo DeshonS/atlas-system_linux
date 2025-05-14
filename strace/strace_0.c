@@ -34,7 +34,10 @@ int main(int argc, char *argv[]) {
         struct user_regs_struct regs;
 
         waitpid(child, &status, 0);
-        ptrace(PTRACE_SYSCALL, child, NULL, NULL);
+		ptrace(PTRACE_SYSCALL, child, NULL, NULL);
+
+		waitpid(child, &status, 0);
+		ptrace(PTRACE_SYSCALL, child, NULL, NULL);
 
         while (1) {
             waitpid(child, &status, 0);
