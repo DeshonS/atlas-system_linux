@@ -14,7 +14,7 @@ const char *get_syscall_name(long syscall_num)
 {
 	for (size_t i = 0; i < sizeof(syscalls_64_g) / sizeof(syscall_t); i++)
 	{
-		if (syscalls_64_g[i].nr == syscall_num)
+		if ((long)syscalls_64_g[i].nr == syscall_num)
 			return syscalls_64_g[i].name;
 	}
 	return NULL;
