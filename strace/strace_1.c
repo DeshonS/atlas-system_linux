@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 			const char *name = get_syscall_name(regs.orig_rax);
 			if (name)
 				printf("%s\n", name);
+				fflush(stdout);
 			else
 				printf("unknown_syscall_%lld\n", regs.orig_rax);
 
