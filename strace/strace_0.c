@@ -48,9 +48,9 @@ int main(int argc, char *argv[]) {
 
             if (in_syscall == 0) {
 #if defined(__x86_64__)
-                printf("%llu\n", regs.orig_rax);
+				fprintf(stderr, "%llu\n", regs.orig_rax);
 #elif defined(__i386__)
-                printf("%lu\n", regs.orig_eax);
+				fprintf(stderr, "%lu\n", regs.orig_eax);
 #else
 #error Unsupported architecture
 #endif
