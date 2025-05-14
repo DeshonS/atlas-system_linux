@@ -30,26 +30,35 @@ int main(int argc, char *argv[]) {
         exit(1);
     } else {
         int status;
-        waitpid(child, &status, 0);
+        int in_syscall = 0;
+        struct user_regs_struct regs;
 
+        waitpid(child, &status, 0);
         ptrace(PTRACE_SYSCALL, child, NULL, NULL);
+
         while (1) {
             waitpid(child, &status, 0);
-            if (WIFEXITED(status)) break;
+            if (WIFEXITED(status))
+                break;
 
-            struct user_regs_struct regs;
             ptrace(PTRACE_GETREGS, child, NULL, &regs);
 
+            if (in_syscall == 0) {
 #if defined(__x86_64__)
-            printf("%llu\n", regs.orig_rax);
+                printf("%llu\n", regs.orig_rax);
 #elif defined(__i386__)
-            printf("%lu\n", regs.orig_eax);
+                printf("%lu\n", regs.orig_eax);
 #else
 #error Unsupported architecture
 #endif
+                in_syscall = 1;
+            } else {
+                in_syscall = 0;
+            }
 
             ptrace(PTRACE_SYSCALL, child, NULL, NULL);
         }
     }
+
     return 0;
 }
