@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
 				fflush(stdout);
 			} else {
 				printf("unknown_syscall_%lld\n", regs.orig_rax);
+				fflush(stdout);
 			}
 			ptrace(PTRACE_SYSCALL, child, NULL, NULL);
 
