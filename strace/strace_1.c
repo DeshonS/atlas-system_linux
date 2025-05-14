@@ -60,12 +60,12 @@ int main(int argc, char *argv[])
 			ptrace(PTRACE_GETREGS, child, NULL, &regs);
 
 			const char *name = get_syscall_name(regs.orig_rax);
-			if (name)
+			if (name) {
 				printf("%s\n", name);
 				fflush(stdout);
-			else
+			} else {
 				printf("unknown_syscall_%lld\n", regs.orig_rax);
-
+			}
 			ptrace(PTRACE_SYSCALL, child, NULL, NULL);
 
 			waitpid(child, &status, 0);
