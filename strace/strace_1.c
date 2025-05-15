@@ -8,7 +8,7 @@
 #include <errno.h>
 #include "syscalls.h" 
 
-#define SYSCALL_MAX 548  // Adjust if your syscall list is longer
+#define SYSCALL_MAX 548
 
 const char *get_syscall_name(long syscall_num)
 {
