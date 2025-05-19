@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 #endif
                 const char *name = get_syscall_name(syscall_nr);
                 fprintf(stderr, "%s\n", name);
-                fflush(stdout);
+                fflush(stderr);
                 in_syscall = 1;
             } else {
                 in_syscall = 0;
