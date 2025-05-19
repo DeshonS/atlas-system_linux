@@ -9,6 +9,22 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/syscall.h>
+#include "syscalls.h"
+
+static const char *get_syscall_name(long syscall_nr) {
+#if defined(__x86_64__)
+    size_t n = sizeof(syscalls_64_g) / sizeof(syscalls_64_g[0]);
+    if (syscall_nr >= 0 && (size_t)syscall_nr < n)
+        return syscalls_64_g[syscall_nr].name;
+#elif defined(__i386__)
+    size_t n = sizeof(syscalls_32_g) / sizeof(syscalls_32_g[0]);
+    if (syscall_nr >= 0 && (size_t)syscall_nr < n)
+        return syscalls_32_g[syscall_nr].name;
+#else
+#error Unsupported architecture
+#endif
+    return "unknown";
+}
 
 int main(int argc, char *argv[])
 {
@@ -46,7 +62,8 @@ int main(int argc, char *argv[])
 
             if (in_syscall == 0) {
                 in_syscall = 1;
-                printf("%lld", (long long)regs.orig_rax);
+                const char *name = get_syscall_name(regs.orig_rax);
+                printf("%s", name);
                 fflush(stdout);
             } else {
                 in_syscall = 0;
