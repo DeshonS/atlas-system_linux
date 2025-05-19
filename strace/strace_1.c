@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 #error Unsupported architecture
 #endif
                 const char *name = get_syscall_name(syscall_nr);
-                fprintf('%s\n', name);
+                printf("%s\n", name);
                 in_syscall = 1;
             } else {
                 in_syscall = 0;
