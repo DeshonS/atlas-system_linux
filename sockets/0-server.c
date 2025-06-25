@@ -42,11 +42,8 @@ int main(void)
 		close(server_fd);
 		exit(EXIT_FAILURE);
 	}
-
 	printf("Server listening on port 12345\n");
-
 	while (1)
 	pause();
-
-	return 0;
+	return (0);
 }
