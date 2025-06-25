@@ -6,6 +6,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+/**
+ * main - opens a socket and listens for traffic on port 12345
+ * Return: 0 on success, or exit with failure status
+ */
 int main(void)
 {
 	int server_fd, client_fd;
