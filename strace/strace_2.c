@@ -1,11 +1,14 @@
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/user.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include <errno.h>
+#include <sys/syscall.h>
 #include "syscalls.h"
 
 static const char *get_syscall_name(long syscall_nr) {
@@ -23,7 +26,8 @@ static const char *get_syscall_name(long syscall_nr) {
     return "unknown";
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc < 2) {
         fprintf(stderr, "Usage: %s command [args...]\n", argv[0]);
         return 1;
@@ -36,21 +40,15 @@ int main(int argc, char *argv[]) {
     }
 
     if (child == 0) {
-        if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) == -1) {
-            perror("ptrace TRACEME");
-            exit(1);
-        }
+        ptrace(PTRACE_TRACEME, 0, NULL, NULL);
         kill(getpid(), SIGSTOP);
         execv(argv[1], &argv[1]);
         perror("execv");
         exit(1);
     } else {
         int status;
-        int in_syscall = 0;
         struct user_regs_struct regs;
-
-        waitpid(child, &status, 0);
-        ptrace(PTRACE_SYSCALL, child, NULL, NULL);
+        int in_syscall = 0;
 
         waitpid(child, &status, 0);
         ptrace(PTRACE_SYSCALL, child, NULL, NULL);
@@ -63,19 +61,16 @@ int main(int argc, char *argv[]) {
             ptrace(PTRACE_GETREGS, child, NULL, &regs);
 
             if (in_syscall == 0) {
-#if defined(__x86_64__)
-                long syscall_nr = regs.orig_rax;
-#elif defined(__i386__)
-                long syscall_nr = regs.orig_eax;
-#else
-#error Unsupported architecture
-#endif
-                const char *name = get_syscall_name(syscall_nr);
-                fprintf(stderr, "%s\n", name);
-                fflush(stderr);
                 in_syscall = 1;
+                const char *name = get_syscall_name(regs.orig_rax);
+                printf("%s", name);
+                fflush(stdout);
             } else {
                 in_syscall = 0;
+                if (regs.orig_rax == SYS_exit_group)
+                    printf(" = ?\n");
+                else
+                    printf(" = %#llx\n", (long long)regs.rax);
             }
 
             ptrace(PTRACE_SYSCALL, child, NULL, NULL);
