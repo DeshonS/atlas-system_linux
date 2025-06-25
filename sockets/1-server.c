@@ -35,6 +35,12 @@ int main(void)
 		close(server_fd);
 		exit(EXIT_FAILURE);
 	}
+	if (listen(server_fd, 1) == -1)
+	{
+		perror("listen failed");
+		close(server_fd);
+		exit(EXIT_FAILURE);
+	}
 	printf("Server listening on port 12345\n");
 	client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_len);
 	if (client_fd == -1)
