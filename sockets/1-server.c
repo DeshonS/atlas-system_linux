@@ -28,7 +28,7 @@ int main(void)
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
 	server_addr.sin_port = htons(12345);
-	if (bind(server_fd, (struct sockaddr *)&server_addr, 
+	if (bind(server_fd, (struct sockaddr *)&server_addr,
 	sizeof(server_addr)) == -1)
 	{
 		perror("bind failed");
@@ -52,5 +52,5 @@ int main(void)
 	printf("Client connected: %s\n", inet_ntoa(client_addr.sin_addr));
 	close(client_fd);
 	close(server_fd);
-	return 0;
+	return (0);
 }
