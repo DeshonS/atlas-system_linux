@@ -5,6 +5,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+/**
+ * main - opens a socket and listens for traffic on port 12345
+ * Return: 0 on success, or exit with failure status
+ */
 int main(void)
 {
 	int server_fd;
